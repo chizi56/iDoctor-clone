@@ -22,7 +22,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Long id;
 
     @Column(name = "first_name", nullable = true)
     private String firstName;
@@ -41,4 +41,11 @@ public class User {
             mappedBy = "users")
     @JsonIgnore
     private Set<Doctor> doctors = new HashSet<>();
+
+//    @ManyToMany(fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL,
+//            mappedBy = "users")
+//    @JsonIgnore
+//    private Set<Doctor> doctors = new HashSet<>();
+
 }

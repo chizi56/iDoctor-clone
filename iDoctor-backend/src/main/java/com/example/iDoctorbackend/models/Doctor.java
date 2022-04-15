@@ -16,7 +16,7 @@ public class Doctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long doctor_id;
+    private Long id;
 
     @Column(name = "first_name", nullable = true)
     private String firstName;
@@ -45,16 +45,17 @@ public class Doctor {
     @Column(name = "number", nullable = true)
     private String number;
 
-
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+            cascade = CascadeType.ALL)
     @JoinTable(name = "registrations",
-            joinColumns = { @JoinColumn(name = "doctor_id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id") })
+            joinColumns =  @JoinColumn(name = "doctor_id") ,
+            inverseJoinColumns =  @JoinColumn(name = "user_id") )
     private Set<User> users = new HashSet<>();
+
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getDoctors().add(this);
+    }
 
 
 }
