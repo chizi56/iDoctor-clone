@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v2")
 public class UserController {
 
 
@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = new ArrayList<User>(userRepository.findAll());
+        List<User> users = new ArrayList<>(userRepository.findAll());
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -62,23 +62,31 @@ public class UserController {
     }
     @PostMapping("/doctors/{doctorId}/users")
     public ResponseEntity<User> addUser(@PathVariable(value = "doctorId") Long doctorId, @RequestBody User userRequest) {
-        User user = doctorRepository.findById(doctorId).map(doctor -> {
-            long userId = userRequest.getId();
-
-            // tag is existed
-            if (userId != 0L) {
-                User _user = userRepository.findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = " + userId));
-                doctor.addUser(_user);
-                doctorRepository.save(doctor);
-                return _user;
-            }
-
-            // add and create new Tag
-            doctor.addUser(userRequest);
+//        User user = doctorRepository.findById(doctorId).map(doctor -> {
+//            long userId = userRequest.getId();
+//
+//            // tag is existed
+//            if (userId != 0L) {
+//                User _user = userRepository.findById(userId)
+//                        .orElseThrow(() -> new ResourceNotFoundException("Not found User with id = " + userId));
+//                doctor.addUser(_user);
+//                doctorRepository.save(doctor);
+//                return _user;
+//            }
+//
+//            // add and create new Tag
+//            doctor.addUser(userRequest);
+//            return userRepository.save(userRequest);
+//        }).orElseThrow(() -> new ResourceNotFoundException("Not found Doctor with id = " + doctorId));
+//        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
+        Optional<Object> user = doctor.map(d -> {
+            d.addUser(userRequest);
             return userRepository.save(userRequest);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + doctorId));
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        });
+        return new ResponseEntity<>(userRequest, HttpStatus.OK);
+
+
     }
 
 

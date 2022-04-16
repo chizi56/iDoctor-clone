@@ -52,6 +52,19 @@ public class Doctor {
             inverseJoinColumns =  @JoinColumn(name = "user_id") )
     private Set<User> users = new HashSet<>();
 
+    public Doctor(Long id, String firstName, String secondName, String password, String address, String clinic_name, int expirienceYearAmount, int price, String specialization, String number) {
+        this.id = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.password = password;
+        this.address = address;
+        this.clinic_name = clinic_name;
+        this.expirienceYearAmount = expirienceYearAmount;
+        this.price = price;
+        this.specialization = specialization;
+        this.number = number;
+    }
+
     public void addUser(User user) {
         this.users.add(user);
         user.getDoctors().add(this);
