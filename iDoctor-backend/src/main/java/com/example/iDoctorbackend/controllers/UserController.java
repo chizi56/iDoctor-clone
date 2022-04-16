@@ -80,7 +80,7 @@ public class UserController {
 //        }).orElseThrow(() -> new ResourceNotFoundException("Not found Doctor with id = " + doctorId));
 //        return new ResponseEntity<>(user, HttpStatus.CREATED);
         Optional<Doctor> doctor = doctorRepository.findById(doctorId);
-        Optional<Object> user = doctor.map(d -> {
+        doctor.map(d -> {
             d.addUser(userRequest);
             return userRepository.save(userRequest);
         });
